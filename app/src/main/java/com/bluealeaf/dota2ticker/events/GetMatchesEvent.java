@@ -30,6 +30,8 @@ public class GetMatchesEvent {
         //do db stuff
         //Get the last ID
         id = 1 ;
+
+
         Log.d("OnRequestForId", "Here");
         BusProvider.getInstance().post(new PassIdEvent());
 
