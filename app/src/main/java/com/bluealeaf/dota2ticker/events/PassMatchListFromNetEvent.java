@@ -9,9 +9,9 @@ import com.bluealeaf.dota2ticker.models.Match;
 
 import java.util.List;
 
-public class PassMatchListEvent {
+public class PassMatchListFromNetEvent {
     private Api api;
-    public PassMatchListEvent(Api api){
+    public PassMatchListFromNetEvent(Api api){
         this.api = api;
     }
 

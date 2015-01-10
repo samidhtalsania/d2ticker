@@ -6,7 +6,7 @@ package com.bluealeaf.dota2ticker.async;
 
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Endpoints;
-import com.bluealeaf.dota2ticker.events.PassMatchListEvent;
+import com.bluealeaf.dota2ticker.events.PassMatchListFromNetEvent;
 import com.bluealeaf.dota2ticker.models.Api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +22,7 @@ public class RestClient {
 
     private static final String tag = RestClient.class.getName();
 
-    public static void getMatchesList(int id){
+    public static void getMatchesList(long id){
 
         Gson gson = new GsonBuilder()
                     .create();
@@ -41,13 +41,13 @@ public class RestClient {
             public void success(Api api, Response response) {
                 //pass an event to main activity on success
                 Api temp = api;
-                BusProvider.getInstance().post(new PassMatchListEvent(temp));
+                BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(temp));
             }
 
             @Override
             public void failure(RetrofitError error) {
                 //pass an event to main activity on failure
-                BusProvider.getInstance().post(new PassMatchListEvent(null));
+                BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(null));
             }
         });
 

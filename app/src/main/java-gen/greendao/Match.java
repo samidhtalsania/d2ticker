@@ -11,7 +11,7 @@ public class Match {
     private String t2;
     private String t1c;
     private String t2c;
-    private String ETA;
+    private Long ETA;
 
     public Match() {
     }
@@ -20,7 +20,7 @@ public class Match {
         this.id = id;
     }
 
-    public Match(Long id, String t1, String t2, String t1c, String t2c, String ETA) {
+    public Match(Long id, String t1, String t2, String t1c, String t2c, Long ETA) {
         this.id = id;
         this.t1 = t1;
         this.t2 = t2;
@@ -69,11 +69,11 @@ public class Match {
         this.t2c = t2c;
     }
 
-    public String getETA() {
+    public Long getETA() {
         return ETA;
     }
 
-    public void setETA(String ETA) {
+    public void setETA(Long ETA) {
         this.ETA = ETA;
     }
 

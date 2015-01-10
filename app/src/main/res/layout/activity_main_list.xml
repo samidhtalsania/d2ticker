@@ -33,6 +33,12 @@
         android:layout_centerVertical="true"
         android:id="@+id/teamTwo"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teamOne"
+        android:id="@+id/ETA"/>
+
     <Switch
         android:id="@+id/alarmSwitch"
         android:layout_width="wrap_content"

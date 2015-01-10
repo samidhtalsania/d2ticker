@@ -7,14 +7,14 @@ import de.greenrobot.daogenerator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(3, "greendao");
+        Schema schema = new Schema(1, "greendao");
         Entity box = schema.addEntity("Match");
         box.addIdProperty();
         box.addStringProperty("t1");
         box.addStringProperty("t2");
         box.addStringProperty("t1c");
         box.addStringProperty("t2c");
-        box.addStringProperty("ETA");
+        box.addLongProperty("ETA");
         new DaoGenerator().generateAll(schema, args[0]);
     }
 }
