@@ -1,14 +1,17 @@
 package com.bluealeaf.dota2ticker;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.bluealeaf.dota2ticker.adapters.MatchListAdapter;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
-import com.bluealeaf.dota2ticker.events.GetIdEvent;
+import com.bluealeaf.dota2ticker.constants.Errors;
+import com.bluealeaf.dota2ticker.constants.OkHttpClientConst;
+import com.bluealeaf.dota2ticker.events.GetIdFromDbEvent;
 import com.bluealeaf.dota2ticker.events.PassMatchListEvent;
 import com.bluealeaf.dota2ticker.models.Match;
 import com.squareup.otto.Subscribe;
@@ -16,9 +19,6 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,7 +28,9 @@ public class MainActivity extends ActionBarActivity {
     private List<Match> matches;
     private ListView listView;
     private MatchListAdapter adapter;
-    private PtrFrameLayout frame;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
 
     private static final String tag = MainActivity.class.getName();
 
@@ -39,29 +41,18 @@ public class MainActivity extends ActionBarActivity {
         matches = new ArrayList<Match>();
         listView = (ListView) findViewById(R.id.match_list_view);
 
-
-        frame = (PtrFrameLayout) findViewById(R.id.material_style_ptr_frame);
-
-        // header
-        final MaterialHeader header = new MaterialHeader(this.getApplicationContext());
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPtrFrameLayout(frame);
-
-        frame.setHeaderView(header);
-        frame.addPtrUIHandler(header);
-
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view2) {
-                return true;
-            }
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.blue, R.color.purple,
+                R.color.green, R.color.orange);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
 
             @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                //calls OnRequestForId method in GetMatchesEvent.java
-                BusProvider.getInstance().post(new GetIdEvent());
+            public void onRefresh() {
+                BusProvider.getInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
             }
         });
+
         Log.d(tag, "Create");
     }
 
@@ -72,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
         //Register subscribed event
         BusProvider.getInstance().register(this);
         //Post an event to get List of Matches
-        BusProvider.getInstance().post(new GetIdEvent());
+        BusProvider.getInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_CACHE));
         Log.d(tag, "Resume");
     }
 
@@ -87,9 +78,18 @@ public class MainActivity extends ActionBarActivity {
 
     @Subscribe
     public void OnListReceived(PassMatchListEvent event){
-        frame.refreshComplete();
-        matches = event.getMatchList();
-        adapter = new MatchListAdapter(this,matches);
-        listView.setAdapter(adapter);
+        if(swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        if(event != null) {
+            matches = event.getMatchList();
+            adapter = new MatchListAdapter(this, matches);
+            listView.setAdapter(adapter);
+        }
+        else{
+            Toast.makeText(this, Errors.Retrofit_error,Toast.LENGTH_LONG);
+        }
     }
+
 }

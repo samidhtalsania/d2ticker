@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.bluealeaf.dota2ticker.async.RestClient;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
-import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -13,33 +12,18 @@ import com.squareup.otto.Subscribe;
 public class GetMatchesEvent {
 
     private int id;
+    private static final String tag = GetMatchesEvent.class.getName();
 
-    public GetMatchesEvent(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-
-
+    public GetMatchesEvent() { }
 
     @Subscribe
-    public void OnRequestForId(GetIdEvent event){
+    public void OnRequestForId(GetIdFromDbEvent event){
         //do db stuff
         //Get the last ID
         id = 1 ;
 
-
-        Log.d("OnRequestForId", "Here");
-        BusProvider.getInstance().post(new PassIdEvent());
-
-    }
-
-    @Produce
-    public PassIdEvent producePassIdEvent(){
-        return new PassIdEvent(id);
+        Log.d(tag, "Here");
+        BusProvider.getInstance().post(new PassIdEvent(id));
     }
 
 

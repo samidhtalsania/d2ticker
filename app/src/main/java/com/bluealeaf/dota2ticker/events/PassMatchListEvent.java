@@ -16,7 +16,7 @@ public class PassMatchListEvent {
     }
 
     public List<Match> getMatchList(){
-        return this.api.getMatches();
+        return api.getMatches();
     }
 
     public boolean getStatus(){

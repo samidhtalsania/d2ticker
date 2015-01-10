@@ -14,21 +14,25 @@ import com.google.gson.GsonBuilder;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
 
+    private static final String tag = RestClient.class.getName();
 
     public static void getMatchesList(int id){
 
         Gson gson = new GsonBuilder()
                     .create();
 
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new GsonConverter(gson))
+                .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();
 
         d2ticker ticker = restAdapter.create(d2ticker.class);
@@ -43,6 +47,7 @@ public class RestClient {
             @Override
             public void failure(RetrofitError error) {
                 //pass an event to main activity on failure
+                BusProvider.getInstance().post(new PassMatchListEvent(null));
             }
         });
 
