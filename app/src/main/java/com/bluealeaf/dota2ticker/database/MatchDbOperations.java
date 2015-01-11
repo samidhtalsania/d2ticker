@@ -1,4 +1,4 @@
-package database;
+package com.bluealeaf.dota2ticker.database;
 
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 
@@ -38,7 +38,11 @@ public class MatchDbOperations {
     public static List<Match> getAllMatches(){
         DateTime dt = new DateTime(DateTimeZone.UTC);
         long millis = dt.getMillis();
-        List<Match> match = getMatchDao().queryBuilder().where(MatchDao.Properties.ETA.gt(millis)).build().list();
+        List<Match> match = getMatchDao().queryBuilder()
+                            .where(MatchDao.Properties.ETA.gt(millis))
+                            .orderAsc(MatchDao.Properties.ETA)
+                            .build()
+                            .list();
         return match;
     }
 

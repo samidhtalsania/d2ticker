@@ -9,12 +9,13 @@ import greendao.Match;
  * Created by samidh on 10/1/15.
  */
 public class UpdateMatchesEvent {
-
+    private static final String tag = UpdateMatchesEvent.class.getName();
     private List<Match> matches ;
     public UpdateMatchesEvent(List<Match> matches){
-        matches = new ArrayList<Match>();
+        this.matches = new ArrayList<Match>();
         this.matches = matches;
     }
+
 
     public List<Match> getMatches() {
         return matches;

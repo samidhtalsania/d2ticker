@@ -38,7 +38,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         super(config, daoSession);
     }
 
-    /** Creates the underlying database table. */
+    /** Creates the underlying com.bluealeaf.dota2ticker.database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MATCH' (" + //
@@ -50,7 +50,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
                 "'ETA' INTEGER);"); // 5: ETA
     }
 
-    /** Drops the underlying database table. */
+    /** Drops the underlying com.bluealeaf.dota2ticker.database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'MATCH'";
         db.execSQL(sql);

@@ -10,39 +10,41 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="teamOne"
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:id="@+id/teamOne"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/teamOne"
-        android:text="vs."
+        android:layout_below="@+id/teamOne"
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
+
         android:id="@+id/vs"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/vs"
-        android:text="teamTwo"
+        android:layout_below="@+id/vs"
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:id="@+id/teamTwo"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/teamOne"
+        android:layout_toLeftOf="@+id/alarmSwitch"
+
+        android:layout_marginRight="15dp"
+        android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:id="@+id/ETA"/>
 
-    <Switch
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/alarmSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight = "true"/>
+        android:layout_alignParentRight = "true"
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

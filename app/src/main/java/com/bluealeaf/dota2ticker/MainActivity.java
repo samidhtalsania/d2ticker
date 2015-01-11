@@ -3,6 +3,7 @@ package com.bluealeaf.dota2ticker;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.bluealeaf.dota2ticker.adapters.MatchListAdapter;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    //Holds the id of the last match in database
+    //Holds the id of the last match in com.bluealeaf.dota2ticker.database
 
 
     private ListView listView;
@@ -37,6 +38,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         matches = new ArrayList<greendao.Match>();
         listView = (ListView) findViewById(R.id.match_list_view);
+        adapter = new MatchListAdapter(this,matches);
+        listView.setAdapter(adapter);
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         swipeRefreshLayout.setColorSchemeResources(
@@ -59,6 +63,8 @@ public class MainActivity extends ActionBarActivity {
         BusProvider.getBusInstance().register(this);
         //Post an event to get List of Matches
         BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_CACHE));
+
+        matches.clear();
     }
 
 
@@ -72,23 +78,25 @@ public class MainActivity extends ActionBarActivity {
 
     @Subscribe
     public void OnListReceivedFromDb(PassMatchListFromDBEvent event){
-        matches = event.getMatchList();
-        adapter = new MatchListAdapter(this,matches);
-        listView.setAdapter(adapter);
+        Log.d(tag,String.valueOf(event.getMatchList().size()));
+        if(matches.size() != 0){
+            matches.clear();
+        }
+        matches.addAll(event.getMatchList());
+        adapter.notifyDataSetChanged();
     }
 
     @Subscribe
     public void OnListReceived(UpdateMatchesEvent event){
+
+        Log.d(tag,"OnListReceived");
         if(swipeRefreshLayout.isRefreshing()){
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        if(event != null){
+        if(event.getMatches().size() != 0){
             matches.addAll(event.getMatches());
             adapter.notifyDataSetChanged();
         }
     }
-
-
-
 }

@@ -30,7 +30,7 @@ public class BusProvider extends Application {
     //initialize http client
     private static final OkHttpClient okHttpClient = new OkHttpClient();
 
-    //initialize database session object
+    //initialize com.bluealeaf.dota2ticker.database session object
     private static DaoSession daoSession;
 
 

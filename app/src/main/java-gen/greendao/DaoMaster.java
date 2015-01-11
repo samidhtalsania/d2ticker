@@ -16,12 +16,12 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
 public class DaoMaster extends AbstractDaoMaster {
     public static final int SCHEMA_VERSION = 1;
 
-    /** Creates underlying database table using DAOs. */
+    /** Creates underlying com.bluealeaf.dota2ticker.database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         MatchDao.createTable(db, ifNotExists);
     }
     
-    /** Drops underlying database table using DAOs. */
+    /** Drops underlying com.bluealeaf.dota2ticker.database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         MatchDao.dropTable(db, ifExists);
     }
