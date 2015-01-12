@@ -1,12 +1,13 @@
 package com.bluealeaf.dota2ticker.events;
 
+import android.util.Log;
+
 import com.bluealeaf.dota2ticker.async.RestClient;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.database.MatchDbOperations;
 import com.bluealeaf.dota2ticker.util.MatchConverter;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import greendao.Match;
@@ -23,7 +24,7 @@ public class GetMatchesEvent {
 
     @Subscribe
     public void OnRequestForId(GetIdFromDbEvent event){
-
+        Log.d(tag, "OnRequestForId");
         //do db stuff
         List<Match> matchList = MatchDbOperations.getAllMatches();
         if(matchList.size() != 0){
@@ -45,24 +46,30 @@ public class GetMatchesEvent {
 
 
     @Subscribe
-    public void onReceiveId(PassIdEvent event){
+    public void OnReceiveId(PassIdEvent event){
+        Log.d(tag, "onReceiveId");
         long id = event.getId();
         RestClient.getMatchesList(id);
     }
 
     @Subscribe
-    public void onReceiveNewMatches(PassMatchListFromNetEvent event){
+    public void OnReceiveNewMatches(PassMatchListFromNetEvent event)  {
         //New matches are fetched.
         //Add the into com.bluealeaf.dota2ticker.database.
-        if(event != null) {
-            if(event.getMatchList().size() != 0){
-                List<Match> dbMatchList = MatchConverter.netToDB(event.getMatchList());
-                MatchDbOperations.insertAll(dbMatchList);
-                //Send another event to main ui to update it with the new matches
-                BusProvider.getBusInstance().post(new UpdateMatchesEvent(dbMatchList));
+        Log.d(tag, "onReceiveNewMatches");
+        Log.d(tag,String.valueOf(event.getMatchList().size()));
+        if(event.getMatchList().size() != 0){
+            List<Match> dbMatchList = MatchConverter.netToDB(event.getMatchList());
+            MatchDbOperations.insertAll(dbMatchList);
+            //Send another event to main ui to update it with the new matches
+            BusProvider.getBusInstance().post(new UpdateMatchesEvent(dbMatchList));
+        }
+        else{
+            if(event.getMessage().equalsIgnoreCase("Updated")){
+                BusProvider.getBusInstance().post(new NoNewMatchesEvent());
             }
             else{
-                BusProvider.getBusInstance().post(new UpdateMatchesEvent(new ArrayList<Match>()));
+                BusProvider.getBusInstance().post(new ConnectionErrorEvent(event.getMessage()));
             }
 
         }
