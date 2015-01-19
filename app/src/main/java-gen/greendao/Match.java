@@ -12,6 +12,7 @@ public class Match {
     private String t1c;
     private String t2c;
     private Long ETA;
+    private Boolean alarm_set;
 
     public Match() {
     }
@@ -20,13 +21,14 @@ public class Match {
         this.id = id;
     }
 
-    public Match(Long id, String t1, String t2, String t1c, String t2c, Long ETA) {
+    public Match(Long id, String t1, String t2, String t1c, String t2c, Long ETA, Boolean alarm_set) {
         this.id = id;
         this.t1 = t1;
         this.t2 = t2;
         this.t1c = t1c;
         this.t2c = t2c;
         this.ETA = ETA;
+        this.alarm_set = alarm_set;
     }
 
     public Long getId() {
@@ -75,6 +77,14 @@ public class Match {
 
     public void setETA(Long ETA) {
         this.ETA = ETA;
+    }
+
+    public Boolean getAlarm_set() {
+        return alarm_set;
+    }
+
+    public void setAlarm_set(Boolean alarm_set) {
+        this.alarm_set = alarm_set;
     }
 
 }
