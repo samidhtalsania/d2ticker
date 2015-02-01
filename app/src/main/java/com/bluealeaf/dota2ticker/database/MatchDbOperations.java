@@ -15,6 +15,8 @@ import greendao.MatchDao;
  */
 public class MatchDbOperations {
 
+    public static final String tag = MatchDbOperations.class.getName();
+
     public static void insertOrUpdate(Match match){
         getMatchDao().insertOrReplace(match);
     }
@@ -45,6 +47,21 @@ public class MatchDbOperations {
                             .list();
         return match;
     }
+
+    public static void updateAlarm(Match match, Boolean flag){
+        if(flag){
+            match.setAlarm_set(flag);
+        }
+        else{
+            match.setAlarm_set(flag);
+        }
+        getMatchDao().update(match);
+    }
+
+    public static Match getMatch(long id){
+        return getMatchDao().queryBuilder().where(MatchDao.Properties.Id.eq(id)).build().unique();
+    }
+
 
     private static MatchDao getMatchDao(){
         return BusProvider.getDaoSessionInstance().getMatchDao();

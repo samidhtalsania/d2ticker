@@ -1,6 +1,7 @@
 package com.bluealeaf.dota2ticker;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -42,13 +43,34 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()   // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        matches = new ArrayList<greendao.Match>();
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         listView = (ListView) findViewById(R.id.match_list_view);
+        matches = new ArrayList<greendao.Match>();
         adapter = new MatchListAdapter(this,matches);
         listView.setAdapter(adapter);
-
+        Log.d(tag,String.valueOf(matches.size()));
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         swipeRefreshLayout.setColorSchemeResources(
@@ -62,93 +84,76 @@ public class MainActivity extends ActionBarActivity {
                 isSwiped = true;
             }
         });
-    }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         //Register subscribed event
         BusProvider.getBusInstance().register(this);
         //Post an event to get List of Matches
         BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_CACHE));
     }
 
-
-
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(tag,"pause");
         //Unregister subscribed event
         BusProvider.getBusInstance().unregister(this);
     }
 
     @Subscribe
     public void OnListReceivedFromDb(PassMatchListFromDBEvent event){
-        Log.d(tag, "OnListReceivedFromDb");
-//        Log.d(tag,String.valueOf(event.getMatchList().size()));
-        if(matches.size() != 0){
-            matches.clear();
-
-        }
         updateMatches(event.getMatchList());
-        Log.d(tag,String.valueOf(matches.size()));
         adapter.notifyDataSetChanged();
     }
 
     @Subscribe
     public void OnListReceived(UpdateMatchesEvent event){
 
-            Log.d(tag, "OnListReceived");
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
 
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        if(isSwiped){
+            Toast.makeText(this,"Updated",Toast.LENGTH_LONG).show();
+            isSwiped = false;
+        }
 
-            if(isSwiped){
-                Toast.makeText(this,"Updated",Toast.LENGTH_LONG).show();
-                isSwiped = false;
-            }
+        if (event.getMatches().size() != 0) {
+            updateMatches(event.getMatches());
+            Collections.sort(matches, new Comparator<Match>() {
+                @Override
+                public int compare(Match lhs, Match rhs) {
+                    return lhs.getETA().compareTo(rhs.getETA());
+                }
+            });
+            adapter.notifyDataSetChanged();
+        }
 
-            if (event.getMatches().size() != 0) {
-                updateMatches(event.getMatches());
-                Collections.sort(matches, new Comparator<Match>() {
-                    @Override
-                    public int compare(Match lhs, Match rhs) {
-                        return lhs.getETA().compareTo(rhs.getETA());
-                    }
-                });
-                Log.d(tag, String.valueOf(matches.size()));
-                adapter.notifyDataSetChanged();
-            }
+        Log.d(tag,"OnListReceived");
 
     }
 
     @Subscribe
     public void OnConnectionError(ConnectionErrorEvent event){
-        Log.d(tag, "OnConnectionError");
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
         Toast.makeText(this,event.getMessage(),Toast.LENGTH_LONG).show();
         adapter.notifyDataSetChanged();
+        Log.d(tag,"OnConnectionError");
     }
 
     @Subscribe
     public void OnNoNewMatchesReceived(NoNewMatchesEvent event){
-        Log.d(tag, "OnNoNewMatchesReceived");
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
-        Log.d(tag, String.valueOf(matches.size()));
+        Toast.makeText(this,"Updated",Toast.LENGTH_LONG).show();
         adapter.notifyDataSetChanged();
     }
 
     private synchronized void  updateMatches(List<Match> matches){
-        Log.d(tag,"matches");
         this.matches.addAll(matches);
-        Log.d(tag,String.valueOf(this.matches.size()));
     }
 }

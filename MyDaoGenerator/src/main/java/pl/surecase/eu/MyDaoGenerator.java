@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(2, "greendao");
+        Schema schema = new Schema(1, "greendao");
         Entity box = schema.addEntity("Match");
         box.addIdProperty();
         box.addStringProperty("t1");

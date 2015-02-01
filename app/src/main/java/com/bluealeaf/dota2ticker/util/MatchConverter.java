@@ -35,7 +35,7 @@ public class MatchConverter {
             newMatch.setT1c(match.getT1c());
             newMatch.setT2(match.getT2());
             newMatch.setT2c(match.getT2c());
-
+            newMatch.setAlarm_set(false);
             DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
             DateTime dt = df.withZone(DateTimeZone.UTC).parseDateTime(match.getETA());
             long seconds = dt.getMillis();
@@ -56,6 +56,7 @@ public class MatchConverter {
             newMatch.setT1c(match.getT1c());
             newMatch.setT2(match.getT2());
             newMatch.setT2c(match.getT2c());
+
 
         }
 

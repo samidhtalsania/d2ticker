@@ -47,7 +47,6 @@ public class GetMatchesEvent {
 
     @Subscribe
     public void OnReceiveId(PassIdEvent event){
-        Log.d(tag, "onReceiveId");
         long id = event.getId();
         RestClient.getMatchesList(id);
     }
@@ -56,8 +55,6 @@ public class GetMatchesEvent {
     public void OnReceiveNewMatches(PassMatchListFromNetEvent event)  {
         //New matches are fetched.
         //Add the into com.bluealeaf.dota2ticker.database.
-        Log.d(tag, "onReceiveNewMatches");
-        Log.d(tag,String.valueOf(event.getMatchList().size()));
         if(event.getMatchList().size() != 0){
             List<Match> dbMatchList = MatchConverter.netToDB(event.getMatchList());
             MatchDbOperations.insertAll(dbMatchList);
