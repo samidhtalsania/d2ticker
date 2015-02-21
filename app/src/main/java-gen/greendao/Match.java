@@ -5,6 +5,10 @@ package greendao;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// KEEP INCLUDES - put your custom includes here
+// KEEP INCLUDES END
+
+
 /**
  * Entity mapped to table MATCH.
  */
@@ -25,15 +29,10 @@ public class Match implements Parcelable{
         this.id = id;
     }
 
-    public Match(Long id, String t1, String t2, String t1c, String t2c, Long ETA, Boolean alarm_set) {
-        this.id = id;
-        this.t1 = t1;
-        this.t2 = t2;
-        this.t1c = t1c;
-        this.t2c = t2c;
-        this.ETA = ETA;
-        this.alarm_set = alarm_set;
-    }
+    // KEEP FIELDS - put your custom fields here
+    // KEEP FIELDS END
+
+
 
     public Long getId() {
         return id;
@@ -91,12 +90,15 @@ public class Match implements Parcelable{
         this.alarm_set = alarm_set;
     }
 
+    // KEEP METHODS - put your custom methods here
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(t1);
@@ -119,4 +121,17 @@ public class Match implements Parcelable{
         t1 = in.readString();
         t2 = in.readString();
     }
+
+
+    public Match(Long id, String t1, String t2, String t1c, String t2c, Long ETA, Boolean alarm_set) {
+        this.id = id;
+        this.t1 = t1;
+        this.t2 = t2;
+        this.t1c = t1c;
+        this.t2c = t2c;
+        this.ETA = ETA;
+        this.alarm_set = alarm_set;
+    }
+    // KEEP METHODS END
+
 }

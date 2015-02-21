@@ -1,10 +1,13 @@
 package com.bluealeaf.dota2ticker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,6 +19,9 @@ import com.bluealeaf.dota2ticker.events.GetIdFromDbEvent;
 import com.bluealeaf.dota2ticker.events.NoNewMatchesEvent;
 import com.bluealeaf.dota2ticker.events.PassMatchListFromDBEvent;
 import com.bluealeaf.dota2ticker.events.UpdateMatchesEvent;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -39,25 +45,42 @@ public class MainActivity extends ActionBarActivity {
 
     private boolean isSwiped = false;
 
+    private Context mContext;
+
     private static final String tag = MainActivity.class.getName();
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()   // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+//                .detectNetwork()   // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectLeakedSqlLiteObjects()
+//                .detectLeakedClosableObjects()
+//                .penaltyLog()
+//                .penaltyDeath()
+//                .build());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mContext = this;
+
     }
 
 
@@ -76,14 +99,30 @@ public class MainActivity extends ActionBarActivity {
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.blue, R.color.purple,
                 R.color.green, R.color.orange);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
                 isSwiped = true;
+                matches.clear();
+                BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
+
             }
         });
+        listView.setItemsCanFocus(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Match match = (Match)listView.getItemAtPosition(position);
+                Intent intent = new Intent(mContext,MatchDetailsActivity.class);
+                intent.putExtra("MATCH_ID", match);
+                Log.d(tag,"Clicked");
+                startActivity(intent);
+
+            }
+        });
+
+        mAdView.resume();
 
         //Register subscribed event
         BusProvider.getBusInstance().register(this);
@@ -94,10 +133,19 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(tag,"pause");
+        mAdView.pause();
+
         //Unregister subscribed event
         BusProvider.getBusInstance().unregister(this);
     }
+
+    public void onDestroy() {
+        // Destroy the AdView.
+        mAdView.destroy();
+
+        super.onDestroy();
+    }
+
 
     @Subscribe
     public void OnListReceivedFromDb(PassMatchListFromDBEvent event){
@@ -113,7 +161,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if(isSwiped){
-            Toast.makeText(this,"Updated",Toast.LENGTH_LONG).show();
             isSwiped = false;
         }
 
@@ -127,6 +174,8 @@ public class MainActivity extends ActionBarActivity {
             });
             adapter.notifyDataSetChanged();
         }
+
+
 
         Log.d(tag,"OnListReceived");
 
@@ -149,7 +198,7 @@ public class MainActivity extends ActionBarActivity {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
-        Toast.makeText(this,"Updated",Toast.LENGTH_LONG).show();
+
         adapter.notifyDataSetChanged();
     }
 

@@ -1,50 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:layout_margin="@dimen/list_margin"
     android:padding="@dimen/list_padding"
-    android:background="@color/white">
+    android:orientation="vertical">
 
-
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/list_margin"
-        android:textStyle="bold"
-        android:id="@+id/teamOne"/>
+        android:id="@+id/teamOneData">
 
-    <TextView
+        <ImageView
+            android:id="@+id/teamOneCnt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/abc_btn_radio_to_on_mtrl_000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:id="@+id/teamOne"
+            android:layout_toRightOf="@+id/teamOneCnt"
+            android:text="newbee"
+            android:layout_marginLeft="10dp"/>
+
+        </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/teamOne"
         android:layout_marginLeft="@dimen/list_margin"
+        android:id="@+id/matchData">
 
-        android:id="@+id/vs"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:id="@+id/vs"/>
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/alarmSwitch"
+
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:id="@+id/ETA"/>
+
+        <Switch
+            android:id="@+id/alarmSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight = "true"
+            android:layout_centerVertical="true"/>
+
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vs"
         android:layout_marginLeft="@dimen/list_margin"
-        android:textStyle="bold"
-        android:id="@+id/teamTwo"/>
+        android:id="@+id/teamTwoData">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/alarmSwitch"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/teamTwoCnt"
+            android:textStyle="bold"
+            android:text="newbee"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/teamTwo"/>
 
-        android:layout_marginRight="15dp"
-        android:layout_centerVertical="true"
-        android:textStyle="bold"
-        android:id="@+id/ETA"/>
+        <ImageView
+            android:id="@+id/teamTwoCnt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/abc_btn_radio_to_on_mtrl_000"
+            />
 
-    <Switch
-        android:id="@+id/alarmSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight = "true"
-        android:layout_centerVertical="true"/>
+        </RelativeLayout>
 
-</RelativeLayout>
+
+
+
+
+
+</LinearLayout>

@@ -62,6 +62,16 @@ public class MatchDbOperations {
         return getMatchDao().queryBuilder().where(MatchDao.Properties.Id.eq(id)).build().unique();
     }
 
+    public static List<Match> search(String searchQuery){
+        String modifiedQuery = "%".concat(searchQuery).concat("%");
+        Query<Match> query =  getMatchDao().queryBuilder().where(MatchDao.Properties.T1.like(modifiedQuery)).build();
+        List<Match> result = query.list();
+        query = getMatchDao().queryBuilder().where(MatchDao.Properties.T2.like(modifiedQuery)).build();
+        result.addAll(result.size(),query.list());
+        return result;
+    }
+
+
 
     private static MatchDao getMatchDao(){
         return BusProvider.getDaoSessionInstance().getMatchDao();

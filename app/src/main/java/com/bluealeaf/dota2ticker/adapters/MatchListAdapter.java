@@ -5,12 +5,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -43,6 +43,8 @@ public class MatchListAdapter extends BaseAdapter {
         TextView vs;
         TextView teamTwo;
         TextView ETA;
+        ImageView teamOneCnt;
+        ImageView teamTwoCnt;
         Switch alarmSwitch;
     }
 
@@ -82,6 +84,8 @@ public class MatchListAdapter extends BaseAdapter {
             viewHolder.vs = (TextView) view.findViewById(R.id.vs);
             viewHolder.ETA = (TextView) view.findViewById(R.id.ETA);
             viewHolder.alarmSwitch = (Switch) view.findViewById(R.id.alarmSwitch);
+            viewHolder.teamOneCnt = (ImageView) view.findViewById(R.id.teamOneCnt);
+            viewHolder.teamTwoCnt = (ImageView) view.findViewById(R.id.teamTwoCnt);
             view.setTag(viewHolder);
         }
         else{
@@ -100,7 +104,21 @@ public class MatchListAdapter extends BaseAdapter {
         viewHolder.teamOne.setText(match_data.getT1());
         viewHolder.teamTwo.setText(match_data.getT2());
         viewHolder.vs.setText("vs");
-//        viewHolder.alarmSwitch.setTag(position);
+
+
+        int t1Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/"+match_data.getT1().replace(" ","_").toLowerCase()+"_60px",null,null);
+        int t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/"+match_data.getT2().replace(" ","_").toLowerCase()+"_60px",null,null);
+
+        if(t1Resource == 0){
+            t1Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+        }
+
+        if(t2Resource == 0){
+            t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+        }
+
+        viewHolder.teamOneCnt.setImageResource(t1Resource);
+        viewHolder.teamTwoCnt.setImageResource(t2Resource);
 
         viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -119,7 +137,7 @@ public class MatchListAdapter extends BaseAdapter {
 
                 //switch from on to off
                 if(!isChecked){
-                    Log.d(tag, "called!");
+
                     MatchDbOperations.updateAlarm(match_data, false);
                     removeAlarm(match_data);
                     match_data.setAlarm_set(false);
@@ -139,13 +157,13 @@ public class MatchListAdapter extends BaseAdapter {
         intent.putExtra("MATCH_ID", match);
         PendingIntent pendingIntent;
         try {
-            pendingIntent = PendingIntent.getBroadcast(context, safeLongToInt(match.getId())+65535, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent = PendingIntent.getBroadcast(context, safeLongToInt(match.getId()), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         catch(IllegalArgumentException ex){
             throw ex;
         }
         //300000 = 5 mins. Alarm gonna ring 5 mins before time
-        alarmManager.set(AlarmManager.RTC_WAKEUP,match.getETA()*1000-300000, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,match.getETA()-300000, pendingIntent);
     }
 
     private void removeAlarm(Match match){
@@ -154,7 +172,7 @@ public class MatchListAdapter extends BaseAdapter {
         intent.putExtra("MATCH_ID", (Parcelable)match);
         PendingIntent pendingIntent;
         try {
-            pendingIntent = PendingIntent.getService(context, safeLongToInt(match.getId())+65535, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent = PendingIntent.getBroadcast(context, safeLongToInt(match.getId()), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         catch(IllegalArgumentException ex){
             throw ex;
