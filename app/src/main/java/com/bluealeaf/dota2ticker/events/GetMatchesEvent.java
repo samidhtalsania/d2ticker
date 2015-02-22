@@ -61,6 +61,8 @@ public class GetMatchesEvent {
             //Send another event to main ui to update it with the new matches
             BusProvider.getBusInstance().post(new UpdateMatchesEvent(dbMatchList));
         }
+        // Can handle this better. Remove this else. Check for network connection before making network call(line 44 of this file)
+
         else{
             if(event.getMessage().equalsIgnoreCase("Updated")){
                 BusProvider.getBusInstance().post(new NoNewMatchesEvent());

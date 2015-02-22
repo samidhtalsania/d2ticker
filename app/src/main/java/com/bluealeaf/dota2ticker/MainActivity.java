@@ -41,18 +41,25 @@ public class MainActivity extends ActionBarActivity {
     private MatchListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private List<greendao.Match> matches ;
+    private ArrayList<greendao.Match> matches ;
 
     private boolean isSwiped = false;
 
     private Context mContext;
 
     private static final String tag = MainActivity.class.getName();
+    private static final String INDEX = "INDEX";
+    private static final String TOP = "TOP";
 
     private AdView mAdView;
 
+    private int top;
+    private int index;
+    private boolean isInstanceSaved;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO: Make app snappier. Make db calls in background worker thread.
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectDiskReads()
 //                .detectDiskWrites()
@@ -67,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
 //                .build());
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -81,9 +89,17 @@ public class MainActivity extends ActionBarActivity {
 
         mContext = this;
 
+        if(savedInstanceState != null){
+            isInstanceSaved = true;
+            index = savedInstanceState.getInt(INDEX);
+
+            top = savedInstanceState.getInt(TOP);
+        }
+        else{
+            isInstanceSaved = false;
+        }
+
     }
-
-
 
     @Override
     protected void onResume() {
@@ -93,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
         matches = new ArrayList<greendao.Match>();
         adapter = new MatchListAdapter(this,matches);
         listView.setAdapter(adapter);
-        Log.d(tag,String.valueOf(matches.size()));
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         swipeRefreshLayout.setColorSchemeResources(
@@ -116,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
                 Match match = matches.get(position);
                 Intent intent = new Intent(mContext,MatchDetailsActivity.class);
                 intent.putExtra("MATCH_ID", match);
-                Log.d(tag,"Clicked");
+
                 startActivity(intent);
 
             }
@@ -135,12 +151,11 @@ public class MainActivity extends ActionBarActivity {
         super.onPause();
         mAdView.pause();
 
-
-
         //Unregister subscribed event
         BusProvider.getBusInstance().unregister(this);
     }
 
+    @Override
     public void onDestroy() {
         // Destroy the AdView.
         mAdView.destroy();
@@ -148,11 +163,26 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle bundle){
+        super.onSaveInstanceState(bundle);
+//        bundle.putParcelableArrayList("Matches",matches);
+        int index = listView.getFirstVisiblePosition();
+        View v = listView.getChildAt(0);
+        int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
+        bundle.putInt(INDEX,index);
+        bundle.putInt(TOP,top);
+    }
+
 
     @Subscribe
     public void OnListReceivedFromDb(PassMatchListFromDBEvent event){
         updateMatches(event.getMatchList());
         adapter.notifyDataSetChanged();
+        if(isInstanceSaved){
+            listView.setSelectionFromTop(index, top);
+            Log.d(tag,"called");
+        }
     }
 
     @Subscribe
@@ -176,11 +206,6 @@ public class MainActivity extends ActionBarActivity {
             });
             adapter.notifyDataSetChanged();
         }
-
-
-
-        Log.d(tag,"OnListReceived");
-
     }
 
     @Subscribe
@@ -190,8 +215,11 @@ public class MainActivity extends ActionBarActivity {
             isSwiped = false;
         }
         Toast.makeText(this,event.getMessage(),Toast.LENGTH_LONG).show();
+        //TODO
+        //why is this used when No extra match data is coming. maybe because if not written it will show an empty list.
+        // Need to check this
         adapter.notifyDataSetChanged();
-        Log.d(tag,"OnConnectionError");
+
     }
 
     @Subscribe
@@ -200,7 +228,9 @@ public class MainActivity extends ActionBarActivity {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
-
+        //TODO
+        //why is this used when No extra match data is coming. maybe because if not written it will show an empty list.
+        // Need to check this
         adapter.notifyDataSetChanged();
     }
 
