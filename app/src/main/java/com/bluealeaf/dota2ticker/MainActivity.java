@@ -109,11 +109,11 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-        listView.setItemsCanFocus(true);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Match match = (Match)listView.getItemAtPosition(position);
+                Match match = matches.get(position);
                 Intent intent = new Intent(mContext,MatchDetailsActivity.class);
                 intent.putExtra("MATCH_ID", match);
                 Log.d(tag,"Clicked");
@@ -134,6 +134,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         mAdView.pause();
+
+
 
         //Unregister subscribed event
         BusProvider.getBusInstance().unregister(this);
