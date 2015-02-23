@@ -179,7 +179,7 @@ public class MainActivity extends ActionBarActivity {
     public void OnListReceivedFromDb(PassMatchListFromDBEvent event){
         updateMatches(event.getMatchList());
         adapter.notifyDataSetChanged();
-        if(isInstanceSaved){
+        if(isInstanceSaved && !isSwiped){
             listView.setSelectionFromTop(index, top);
             Log.d(tag,"called");
         }

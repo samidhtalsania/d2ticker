@@ -1,7 +1,11 @@
 package com.bluealeaf.dota2ticker;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,16 +15,17 @@ import org.joda.time.DateTimeZone;
 import greendao.Match;
 
 
+
 public class MatchDetailsActivity extends ActionBarActivity {
 
     private Match match ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO:Add ads
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_details);
-        Match match = getIntent().getParcelableExtra("MATCH_ID");
-        getActionBar().setHomeButtonEnabled(true);
+        final Match match = getIntent().getParcelableExtra("MATCH_ID");
 
         if(match != null){
 
@@ -47,16 +52,16 @@ public class MatchDetailsActivity extends ActionBarActivity {
             teamOneImg.setImageResource(t1Resource);
             teamTwoImg.setImageResource(t2Resource);
 
-            TextView status = (TextView) findViewById(R.id.matchStatus);
+            final TextView status = (TextView) findViewById(R.id.matchStatus);
 
 
-            long temp = match.getETA() - DateTime.now(DateTimeZone.UTC).getMillis();
-            temp /= 1000;
-            long hours = temp / 3600;
-            long mins = (temp % 3600) / 60;
+            long time = match.getETA() - DateTime.now(DateTimeZone.UTC).getMillis();
+            time /= 1000;
+            long hours = time / 3600;
+            long mins = (time % 3600) / 60;
 
             StringBuilder sb = new StringBuilder();
-            sb.append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m");
+            sb.append("in ").append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m");
 
             if(DateTime.now(DateTimeZone.UTC).getMillis() > match.getETA()-30000){
                 status.setText("LIVE");
@@ -66,7 +71,47 @@ public class MatchDetailsActivity extends ActionBarActivity {
                 status.setTextColor(getResources().getColor(R.color.black));
             }
 
-            this.setTitle(match.getT1() + " VS " + match.getT2());
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                this.setTitle(match.getT1() + " VS " + match.getT2());
+            }
+            else{
+                String t1 = match.getT1(),t2 = match.getT2();
+
+                String[] team = t1.split(" ");
+                if(team.length > 1){
+                    t1 = "" ;
+                    for(String split : team){
+                        char c = split.toUpperCase().charAt(0);
+                        t1 += c ;
+                    }
+                }
+
+                team = t2.split(" ");
+                if(team.length > 1){
+                    t2 = "" ;
+                    for(String split : team){
+                        char c = split.toUpperCase().charAt(0);
+                        t2 += c ;
+                    }
+                }
+                this.setTitle(t1 + " vs " + t2);
+
+            }
+
+
+
+            ImageButton shareButton = (ImageButton) findViewById(R.id.share);
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    StringBuilder sb = new StringBuilder();
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, sb.append(match.getT1()).append(" vs ").append(match.getT2()).append(" ").append(status.getText()).toString());
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Share using..."));
+                }
+            });
 
         }
         else {
