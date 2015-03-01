@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,6 +22,7 @@ import com.bluealeaf.dota2ticker.events.GetIdFromDbEvent;
 import com.bluealeaf.dota2ticker.events.NoNewMatchesEvent;
 import com.bluealeaf.dota2ticker.events.PassMatchListFromDBEvent;
 import com.bluealeaf.dota2ticker.events.UpdateMatchesEvent;
+import com.bluealeaf.dota2ticker.util.MenuActions;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -32,10 +36,9 @@ import java.util.List;
 import greendao.Match;
 
 
+
+
 public class MainActivity extends ActionBarActivity {
-
-
-
 
     private ListView listView;
     private MatchListAdapter adapter;
@@ -146,6 +149,7 @@ public class MainActivity extends ActionBarActivity {
         BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_CACHE));
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -173,6 +177,31 @@ public class MainActivity extends ActionBarActivity {
         bundle.putInt(INDEX,index);
         bundle.putInt(TOP,top);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                MenuActions.openSettings(this);
+//                Intent intent = new Intent(this,SettingsActivity.class);
+//                startActivity(intent);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
 
     @Subscribe

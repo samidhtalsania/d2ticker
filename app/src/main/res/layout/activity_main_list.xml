@@ -17,7 +17,8 @@
             android:id="@+id/teamOneCnt"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/abc_btn_radio_to_on_mtrl_000"/>
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,11 +46,13 @@
             android:id="@+id/vs"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/alarmSwitch"
-
-            android:layout_marginRight="15dp"
+            android:background="@drawable/rounded_corner"
+            android:padding="5dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
             android:layout_centerVertical="true"
             android:textStyle="bold"
             android:id="@+id/ETA"/>
@@ -88,8 +91,8 @@
             android:id="@+id/teamTwoCnt"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/abc_btn_radio_to_on_mtrl_000"
-            />
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
 
         </RelativeLayout>
 

@@ -110,11 +110,13 @@ public class MatchListAdapter extends BaseAdapter {
         int t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/"+match_data.getT2().replace(" ","_").toLowerCase()+"_60px",null,null);
 
         if(t1Resource == 0){
-            t1Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+//            t1Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+            t1Resource = R.drawable.ic_action_help;
         }
 
         if(t2Resource == 0){
-            t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+//            t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
+            t2Resource = R.drawable.ic_action_help;
         }
 
         viewHolder.teamOneCnt.setImageResource(t1Resource);
