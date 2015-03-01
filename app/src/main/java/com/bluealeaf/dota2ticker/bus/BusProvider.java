@@ -1,9 +1,12 @@
 package com.bluealeaf.dota2ticker.bus;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.bluealeaf.dota2ticker.R;
 import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.constants.OkHttpClientConst;
 import com.bluealeaf.dota2ticker.events.GetMatchesEvent;
@@ -33,6 +36,7 @@ public class BusProvider extends Application {
     //initialize com.bluealeaf.dota2ticker.database session object
     private static DaoSession daoSession;
 
+    private static int notifyTime;
 
     //Return a singleton instance of Bus
     public static Bus getBusInstance() {
@@ -47,6 +51,7 @@ public class BusProvider extends Application {
     //Return a singleton instance of DAO Session
     public  static  DaoSession getDaoSessionInstance(){ return daoSession ;}
 
+    public static int getNotifyTime(){ return notifyTime;}
 
     private GetMatchesEvent mGetMatchesEvent;
 
@@ -57,6 +62,8 @@ public class BusProvider extends Application {
         setupDatabase();
 
         setupCache();
+
+        setupSharedPrefs();
 
         //Register GetMatchesEvent class to enabe it to receive events.
         //All subscriber methods are written in this class
@@ -84,5 +91,11 @@ public class BusProvider extends Application {
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
+    }
+
+    private void setupSharedPrefs(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String time = prefs.getString(getString(R.string.pref_alarm_key), "5 mins");
+        notifyTime = Integer.parseInt(time.split(" ")[0]);
     }
 }

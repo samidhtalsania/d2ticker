@@ -2,7 +2,7 @@
 
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
-        android:key="alarm_list"
+        android:key="@string/pref_alarm_key"
         android:title="@string/alarm_before"
         android:defaultValue="-1"
         android:entries="@array/pref_alarm_times"

@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bluealeaf.dota2ticker.R;
+import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.database.MatchDbOperations;
 import com.bluealeaf.dota2ticker.notification.NotificationActivity;
 
@@ -36,7 +37,7 @@ public class MatchListAdapter extends BaseAdapter {
     private long millisCurrent;
     private boolean[] checkedState = new boolean[100];
     private static final String tag = MatchListAdapter.class.getName();
-
+    private int notifyTime;
 
     static class ViewHolder{
         TextView teamOne;
@@ -52,6 +53,7 @@ public class MatchListAdapter extends BaseAdapter {
         this.match = match;
         this.context = context;
         millisCurrent = DateTime.now(DateTimeZone.UTC).getMillis();
+        notifyTime = BusProvider.getNotifyTime();
     }
 
 
@@ -164,8 +166,9 @@ public class MatchListAdapter extends BaseAdapter {
         catch(IllegalArgumentException ex){
             throw ex;
         }
-        //300000 = 5 mins. Alarm gonna ring 5 mins before time
-        alarmManager.set(AlarmManager.RTC_WAKEUP,match.getETA()-300000, pendingIntent);
+        //300000 = 5 mins = 5*60*1000. Alarm gonna ring 5 mins before time
+        //NotifyTime set by user in sharedPref. Default is 5 mins.
+        alarmManager.set(AlarmManager.RTC_WAKEUP,match.getETA()-notifyTime*60*1000, pendingIntent);
     }
 
     private void removeAlarm(Match match){

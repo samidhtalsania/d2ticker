@@ -27,7 +27,7 @@
             android:textStyle="bold"
             android:id="@+id/teamOne"
             android:layout_toRightOf="@+id/teamOneCnt"
-            android:text="newbee"
+
             android:layout_marginLeft="10dp"/>
 
         </RelativeLayout>
@@ -83,7 +83,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/teamTwoCnt"
             android:textStyle="bold"
-            android:text="newbee"
+
             android:layout_marginLeft="10dp"
             android:id="@+id/teamTwo"/>
 
@@ -95,10 +95,5 @@
             android:padding="3dp"/>
 
         </RelativeLayout>
-
-
-
-
-
 
 </LinearLayout>

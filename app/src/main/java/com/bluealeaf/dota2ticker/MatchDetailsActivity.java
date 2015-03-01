@@ -44,11 +44,11 @@ public class MatchDetailsActivity extends ActionBarActivity {
             int t2Resource = this.getResources().getIdentifier(this.getPackageName()+":drawable/"+match.getT2().replace(" ","_").toLowerCase()+"_60px",null,null);
 
             if(t1Resource == 0){
-                t1Resource = this.getResources().getIdentifier(this.getPackageName()+":drawable/unknown_30px",null,null);
+                t1Resource = R.drawable.ic_question;
             }
 
             if(t2Resource == 0){
-                t2Resource = this.getResources().getIdentifier(this.getPackageName()+":drawable/unknown_30px",null,null);
+                t2Resource = R.drawable.ic_question;
             }
 
             teamOneImg.setImageResource(t1Resource);
@@ -65,7 +65,8 @@ public class MatchDetailsActivity extends ActionBarActivity {
             StringBuilder sb = new StringBuilder();
             sb.append("in ").append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m");
 
-            if(DateTime.now(DateTimeZone.UTC).getMillis() > match.getETA()-30000){
+            //If only 5 mins left for match make it live
+            if(DateTime.now(DateTimeZone.UTC).getMillis() > match.getETA()-5*60*1000){
                 status.setText("LIVE");
             }
             else{
