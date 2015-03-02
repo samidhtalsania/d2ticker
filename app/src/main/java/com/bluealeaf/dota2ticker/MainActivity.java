@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity {
     private int index;
     private boolean isInstanceSaved;
 
+    private static final String DEBUG_TAG = "CalendarActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //TODO: Make app snappier. Make db calls in background worker thread.
@@ -101,7 +103,6 @@ public class MainActivity extends ActionBarActivity {
         else{
             isInstanceSaved = false;
         }
-
     }
 
     @Override
@@ -266,4 +267,6 @@ public class MainActivity extends ActionBarActivity {
     private synchronized void  updateMatches(List<Match> matches){
         this.matches.addAll(matches);
     }
+
+
 }

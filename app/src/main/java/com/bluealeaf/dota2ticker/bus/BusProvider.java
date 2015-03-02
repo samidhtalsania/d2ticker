@@ -25,6 +25,9 @@ import greendao.DaoSession;
  */
 public class BusProvider extends Application {
 
+
+
+
     private static final String tag = BusProvider.class.getName();
 
     //initialize event bus

@@ -11,6 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -20,11 +24,11 @@ import greendao.Match;
 
 public class MatchDetailsActivity extends ActionBarActivity {
 
-    private Match match ;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO:Add ads
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_details);
         final Match match = getIntent().getParcelableExtra("MATCH_ID");
@@ -121,6 +125,18 @@ public class MatchDetailsActivity extends ActionBarActivity {
             TextView status = (TextView) findViewById(R.id.matchStatus);
             status.setText("No match");
         }
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     @Override
@@ -129,6 +145,26 @@ public class MatchDetailsActivity extends ActionBarActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_match_details, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAdView.pause();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        // Destroy the AdView.
+        mAdView.destroy();
+        super.onDestroy();
     }
 
 

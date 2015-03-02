@@ -27,7 +27,7 @@
             android:textStyle="bold"
             android:id="@+id/teamOne"
             android:layout_toRightOf="@+id/teamOneCnt"
-
+            android:fontFamily="sans-serif"
             android:layout_marginLeft="10dp"/>
 
         </RelativeLayout>
@@ -43,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:fontFamily="sans-serif"
             android:id="@+id/vs"/>
 
         <TextView
@@ -55,6 +56,7 @@
             android:gravity="center"
             android:layout_centerVertical="true"
             android:textStyle="bold"
+            android:fontFamily="sans-serif"
             android:id="@+id/ETA"/>
 
         <Switch
@@ -83,7 +85,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/teamTwoCnt"
             android:textStyle="bold"
-
+            android:fontFamily="sans-serif-condensed"
             android:layout_marginLeft="10dp"
             android:id="@+id/teamTwo"/>
 
