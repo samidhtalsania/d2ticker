@@ -1,5 +1,6 @@
 package com.bluealeaf.dota2ticker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,16 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluealeaf.dota2ticker.adapters.MatchListAdapter;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
+import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.constants.OkHttpClientConst;
 import com.bluealeaf.dota2ticker.events.ConnectionErrorEvent;
 import com.bluealeaf.dota2ticker.events.GetIdFromDbEvent;
 import com.bluealeaf.dota2ticker.events.NoNewMatchesEvent;
 import com.bluealeaf.dota2ticker.events.PassMatchListFromDBEvent;
+import com.bluealeaf.dota2ticker.events.RestErrorEvent;
 import com.bluealeaf.dota2ticker.events.UpdateMatchesEvent;
+import com.bluealeaf.dota2ticker.util.Internet;
 import com.bluealeaf.dota2ticker.util.MenuActions;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -43,12 +48,14 @@ public class MainActivity extends ActionBarActivity {
     private ListView listView;
     private MatchListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout emptySwipeRefreshLayout;
 
     private ArrayList<greendao.Match> matches ;
 
     private boolean isSwiped = false;
 
     private Context mContext;
+    private Activity mActivity;
 
     private static final String tag = MainActivity.class.getName();
     private static final String INDEX = "INDEX";
@@ -92,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        mContext = this;
+        mContext = mActivity = this;
 
         if(savedInstanceState != null){
             isInstanceSaved = true;
@@ -112,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.match_list_view);
         matches = new ArrayList<greendao.Match>();
         adapter = new MatchListAdapter(this,matches);
-        listView.setAdapter(adapter);
+
 
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
@@ -123,12 +130,39 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onRefresh() {
-                isSwiped = true;
-                matches.clear();
-                BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
-
+                if(Internet.isNetworkAvailable(mActivity)){
+                    isSwiped = true;
+                    matches.clear();
+                    BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
+                }
+                else{
+                    Toast.makeText(mContext,"Please connect to internet.",Toast.LENGTH_LONG).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
+
+
+        emptySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout_emptyView);
+        emptySwipeRefreshLayout.setColorSchemeResources(
+                R.color.blue, R.color.purple,
+                R.color.green, R.color.orange);
+        emptySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                if(Internet.isNetworkAvailable(mActivity)){
+                    isSwiped = true;
+                    matches.clear();
+                    BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
+                }
+                else{
+                    Toast.makeText(mContext,"Please connect to internet.",Toast.LENGTH_LONG).show();
+                    emptySwipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -141,6 +175,9 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
+        listView.setEmptyView(emptySwipeRefreshLayout);
+        listView.setAdapter(adapter);
 
         mAdView.resume();
 
@@ -158,6 +195,10 @@ public class MainActivity extends ActionBarActivity {
 
         //Unregister subscribed event
         BusProvider.getBusInstance().unregister(this);
+        index = listView.getFirstVisiblePosition();
+        View v = listView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
+        isInstanceSaved = true;
     }
 
     @Override
@@ -193,9 +234,6 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 MenuActions.openSettings(this);
-//                Intent intent = new Intent(this,SettingsActivity.class);
-//                startActivity(intent);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -215,14 +253,17 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
     @Subscribe
     public void OnListReceived(UpdateMatchesEvent event){
 
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
+            isSwiped = false;
         }
 
-        if(isSwiped){
+        if(emptySwipeRefreshLayout.isRefreshing()){
+            emptySwipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
 
@@ -236,6 +277,11 @@ public class MainActivity extends ActionBarActivity {
             });
             adapter.notifyDataSetChanged();
         }
+        //There was no error. THere are no matches to show.
+        else{
+            TextView tv = (TextView) findViewById(R.id.emptyView);
+            tv.setText("There are no matches Scheduled. Go enjoy a game of Dota2 and check back later.");
+        }
     }
 
     @Subscribe
@@ -244,7 +290,12 @@ public class MainActivity extends ActionBarActivity {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
-        Toast.makeText(this,event.getMessage(),Toast.LENGTH_LONG).show();
+
+        if(emptySwipeRefreshLayout.isRefreshing()){
+            emptySwipeRefreshLayout.setRefreshing(false);
+            isSwiped = false;
+        }
+//        Toast.makeText(this,event.getMessage(),Toast.LENGTH_LONG).show();
         //TODO
         //why is this used when No extra match data is coming. maybe because if not written it will show an empty list.
         // Need to check this
@@ -258,11 +309,40 @@ public class MainActivity extends ActionBarActivity {
             swipeRefreshLayout.setRefreshing(false);
             isSwiped = false;
         }
+
+        if(emptySwipeRefreshLayout.isRefreshing()){
+            emptySwipeRefreshLayout.setRefreshing(false);
+            isSwiped = false;
+        }
         //TODO
         //why is this used when No extra match data is coming. maybe because if not written it will show an empty list.
         // Need to check this
         adapter.notifyDataSetChanged();
     }
+
+    @Subscribe
+    public void OnError(RestErrorEvent event){
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+            isSwiped = false;
+        }
+
+        if(emptySwipeRefreshLayout.isRefreshing()){
+            emptySwipeRefreshLayout.setRefreshing(false);
+            isSwiped = false;
+        }
+
+        if(event.getMessage().equals(Errors.Retrofit_NETWORK)){
+            //Network error + no matches
+            if(matches.size() == 0){
+                TextView tv = (TextView) findViewById(R.id.emptyView);
+                tv.setText("Not connected to internet. Swipe down after connecting to internet.");
+            }
+        }
+
+
+    }
+
 
     private synchronized void  updateMatches(List<Match> matches){
         this.matches.addAll(matches);

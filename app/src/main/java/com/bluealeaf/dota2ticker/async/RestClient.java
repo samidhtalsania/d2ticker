@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Endpoints;
+import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.events.PassMatchListFromNetEvent;
 import com.bluealeaf.dota2ticker.models.Api;
 import com.google.gson.Gson;
@@ -32,7 +33,7 @@ public class RestClient {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.NONE)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new GsonConverter(gson))
                 .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();
@@ -53,16 +54,16 @@ public class RestClient {
                 Log.d(tag,"getMatchesList-F");
                 //pass an event to main activity on failure
                 if(error.getKind() == RetrofitError.Kind.NETWORK){
-                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent("No network found. Please connect to internet."));
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_NETWORK));
                 }
                 else if(error.getKind() == RetrofitError.Kind.HTTP){
-                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent("Unable to connect to server. Please try again later."));
+                        BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_HTTP));
                 }
                 else if(error.getKind() == RetrofitError.Kind.CONVERSION){
-                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent("Unable to convert."));
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_CONVERSION));
                 }
                 else if(error.getKind() == RetrofitError.Kind.UNEXPECTED){
-                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent("Unexpected error."));
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_UNEXPECTED));
                 }
             }
         });

@@ -64,13 +64,7 @@ public class GetMatchesEvent {
         // Can handle this better. Remove this else. Check for network connection before making network call(line 44 of this file)
 
         else{
-            if(event.getMessage().equalsIgnoreCase("Updated")){
-                BusProvider.getBusInstance().post(new NoNewMatchesEvent());
-            }
-            else{
-                BusProvider.getBusInstance().post(new ConnectionErrorEvent(event.getMessage()));
-            }
-
+           BusProvider.getBusInstance().post(new RestErrorEvent(event.getMessage()));
         }
     }
 }

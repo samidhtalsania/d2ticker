@@ -22,6 +22,40 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout_emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <ImageView
+                    android:id="@+id/no_connection_icon"
+                    android:layout_width="256dp"
+                    android:layout_height="256dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_no_connection"/>
+                <TextView
+                    android:id="@+id/emptyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="20sp"
+                    android:textColor="@color/grey"
+                    android:typeface="serif"
+                    android:gravity="center"
+                    android:layout_marginTop="60dp"
+                    android:padding="15dp"
+                    android:layout_below="@+id/no_connection_icon" />
+            </RelativeLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
