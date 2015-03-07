@@ -10,19 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bluealeaf.dota2ticker.R;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.database.MatchDbOperations;
+import com.bluealeaf.dota2ticker.events.FilteredMatchesEvent;
 import com.bluealeaf.dota2ticker.notification.NotificationActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import greendao.Match;
@@ -30,14 +33,18 @@ import greendao.Match;
 /**
  * Created by samidh on 5/1/15.
  */
-public class MatchListAdapter extends BaseAdapter {
+public class MatchListAdapter extends BaseAdapter implements Filterable {
 
     private List<Match> match;
+    private List<Match> originalMatch;
     private Context context;
     private long millisCurrent;
-    private boolean[] checkedState = new boolean[100];
+
     private static final String tag = MatchListAdapter.class.getName();
     private int notifyTime;
+    private MatchFilter mFilter = new MatchFilter();
+
+
 
     static class ViewHolder{
         TextView teamOne;
@@ -51,6 +58,7 @@ public class MatchListAdapter extends BaseAdapter {
 
     public MatchListAdapter(Context context, List<Match> match) {
         this.match = match;
+        this.originalMatch = match;
         this.context = context;
         millisCurrent = DateTime.now(DateTimeZone.UTC).getMillis();
         notifyTime = BusProvider.getNotifyTime();
@@ -76,7 +84,7 @@ public class MatchListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) throws  IllegalArgumentException{
         View view = convertView;
         ViewHolder viewHolder;
-        final ListView listView = (ListView) parent;
+
         final Match match_data = match.get(position);
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.activity_main_list,null);
@@ -155,6 +163,7 @@ public class MatchListAdapter extends BaseAdapter {
         return view;
     }
 
+
     private void setAlarm(Match match){
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, NotificationActivity.class);
@@ -192,4 +201,54 @@ public class MatchListAdapter extends BaseAdapter {
         }
         return (int) l;
     }
+
+    public void restoreOriginalList(){
+        match = originalMatch;
+    }
+
+    public void setFilteredList(ArrayList<Match> match){
+        this.match = match;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class MatchFilter extends Filter{
+
+
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String filterString = constraint.toString().toLowerCase();
+            FilterResults results = new FilterResults();
+
+            final ArrayList<Match> filterMatches = new ArrayList<>();
+            final List<Match> nonFilterMatches = originalMatch;
+
+            int count = originalMatch.size();
+
+            for(int i = 0 ; i < count ; i++){
+                if (nonFilterMatches.get(i).getT1().toLowerCase().startsWith(filterString) || nonFilterMatches.get(i).getT2().toLowerCase().startsWith(filterString)){
+                    filterMatches.add(nonFilterMatches.get(i));
+                }
+            }
+
+            results.values = filterMatches;
+            results.count = filterMatches.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+
+            BusProvider.getBusInstance().post(new FilteredMatchesEvent(constraint,(ArrayList<Match>)results.values));
+
+        }
+
+    }
 }
+

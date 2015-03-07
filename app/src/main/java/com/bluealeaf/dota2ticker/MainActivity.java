@@ -1,6 +1,7 @@
 package com.bluealeaf.dota2ticker;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.constants.OkHttpClientConst;
 import com.bluealeaf.dota2ticker.events.ConnectionErrorEvent;
+import com.bluealeaf.dota2ticker.events.FilteredMatchesEvent;
 import com.bluealeaf.dota2ticker.events.GetIdFromDbEvent;
 import com.bluealeaf.dota2ticker.events.NoNewMatchesEvent;
 import com.bluealeaf.dota2ticker.events.PassMatchListFromDBEvent;
@@ -43,7 +47,8 @@ import greendao.Match;
 
 
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends ActionBarActivity{
 
     private ListView listView;
     private MatchListAdapter adapter;
@@ -111,6 +116,8 @@ public class MainActivity extends ActionBarActivity {
             isInstanceSaved = false;
         }
     }
+
+
 
     @Override
     protected void onResume() {
@@ -220,13 +227,35 @@ public class MainActivity extends ActionBarActivity {
         bundle.putInt(TOP,top);
     }
 
+    //Search logic implemented here
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -281,6 +310,8 @@ public class MainActivity extends ActionBarActivity {
         else{
             TextView tv = (TextView) findViewById(R.id.emptyView);
             tv.setText("There are no matches Scheduled. Go enjoy a game of Dota2 and check back later.");
+            ImageView iv = (ImageView) findViewById(R.id.no_connection_icon);
+            iv.setVisibility(View.GONE);
         }
     }
 
@@ -337,16 +368,34 @@ public class MainActivity extends ActionBarActivity {
             if(matches.size() == 0){
                 TextView tv = (TextView) findViewById(R.id.emptyView);
                 tv.setText("Not connected to internet. Swipe down after connecting to internet.");
+                ImageView iv = (ImageView) findViewById(R.id.no_connection_icon);
+                iv.setVisibility(View.VISIBLE);
             }
         }
 
 
     }
 
+    @Subscribe
+    public void OnFilteredMatchesReceived(FilteredMatchesEvent event){
+        if(event.getConstraint().toString().length() > 0 ){
+            adapter.setFilteredList(event.getValues());
+            adapter.notifyDataSetChanged();
+            if(event.getValues().size() == 0){
+                TextView tv = (TextView) findViewById(R.id.emptyView);
+                tv.setText("No matches for this team.");
+                ImageView iv = (ImageView) findViewById(R.id.no_connection_icon);
+                iv.setVisibility(View.GONE);
+            }
+        }
+        else{
+            adapter.restoreOriginalList();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
     private synchronized void  updateMatches(List<Match> matches){
         this.matches.addAll(matches);
     }
-
-
 }
