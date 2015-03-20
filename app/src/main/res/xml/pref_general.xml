@@ -4,12 +4,19 @@
     <ListPreference
         android:key="@string/pref_alarm_key"
         android:title="@string/alarm_before"
-        android:defaultValue="-1"
+        android:defaultValue="0"
         android:entries="@array/pref_alarm_times"
         android:entryValues="@array/pref_alarm_times"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         />
+    <Preference
+        android:key="rate_app"
+        android:title="Rate this app"/>
+
+    <Preference
+        android:key="share_app"
+        android:title="Share this app"/>
 
 
 </PreferenceScreen>

@@ -1,8 +1,11 @@
 package com.bluealeaf.dota2ticker;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -81,6 +84,37 @@ public class SettingsActivity extends PreferenceActivity {
         // to reflect the new value, per the Android Design guidelines.
 
         bindPreferenceSummaryToValue(findPreference("alarm_list"));
+
+        Preference rate_app_pref = (Preference)findPreference("rate_app");
+        rate_app_pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Uri uri = Uri.parse("market://details?id=" + getPackageName() );
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                try {
+                    startActivity(goToMarket);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
+                return true;
+            }
+        });
+
+        rate_app_pref.setSummary(getResources().getString(R.string.rate_summary));
+
+        Preference share_app_pref = (Preference)findPreference("share_app");
+        share_app_pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_string));
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, "Share using..."));
+                return true;
+            }
+        });
+        share_app_pref.setSummary(getResources().getString(R.string.share_summary));
     }
 
     /**
@@ -113,9 +147,6 @@ public class SettingsActivity extends PreferenceActivity {
                 || !isXLargeTablet(context);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {

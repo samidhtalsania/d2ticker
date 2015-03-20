@@ -47,9 +47,13 @@ public class NotificationActivity extends BroadcastReceiver {
 
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
+            notification.defaults = Notification.DEFAULT_ALL ;
+
             NotificationManager notificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(safeLongToInt(match.getId())+65535, notification);
+
+
 
         }
     }

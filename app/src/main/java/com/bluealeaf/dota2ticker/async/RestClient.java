@@ -33,7 +33,7 @@ public class RestClient {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(new GsonConverter(gson))
                 .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();

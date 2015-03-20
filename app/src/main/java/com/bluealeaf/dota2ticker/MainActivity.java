@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -227,6 +228,7 @@ public class MainActivity extends ActionBarActivity{
         bundle.putInt(TOP,top);
     }
 
+
     //Search logic implemented here
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -241,6 +243,30 @@ public class MainActivity extends ActionBarActivity{
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+//                getSupportActionBar().setDisplayShowHomeEnabled(false);
+//                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.grey));
+
+
+                Log.d("search","expand");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_app_theme));
+//                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                Log.d("search","collapse");
+                return true;
+
+            }
+        });
+
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

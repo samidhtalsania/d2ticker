@@ -6,6 +6,7 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <!-- Theme for switches-->
         <item name="colorControlActivated">@color/blue_app_theme</item>
+
     </style>
 
     <!-- ActionBar styles -->
@@ -13,5 +14,10 @@
         parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/blue_app_theme</item>
         <item name="background">@color/blue_app_theme</item>
+
     </style>
+
+
+
+
 </resources>
