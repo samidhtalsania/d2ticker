@@ -14,7 +14,18 @@
         parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/blue_app_theme</item>
         <item name="background">@color/blue_app_theme</item>
+        <item name="android:label">@style/ActionBarTitle</item>
 
+    </style>
+
+
+    <style name="ActionBarTitle">
+
+
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/green</item>
+        <item name="android:text">@string/app_name</item>
+        
     </style>
 
 

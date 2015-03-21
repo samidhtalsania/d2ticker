@@ -27,7 +27,7 @@
             android:textStyle="bold"
             android:id="@+id/teamOne"
             android:layout_toRightOf="@+id/teamOneCnt"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-condensed"
             android:layout_marginLeft="10dp"/>
 
         </RelativeLayout>

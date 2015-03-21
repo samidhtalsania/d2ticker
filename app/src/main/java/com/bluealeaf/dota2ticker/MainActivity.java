@@ -238,7 +238,7 @@ public class MainActivity extends ActionBarActivity{
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
@@ -250,7 +250,7 @@ public class MainActivity extends ActionBarActivity{
 //                getSupportActionBar().setDisplayShowHomeEnabled(false);
 //                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.grey));
 
-
+                searchView.setQuery("",false);
                 Log.d("search","expand");
                 return true;
             }
@@ -259,7 +259,9 @@ public class MainActivity extends ActionBarActivity{
             public boolean onMenuItemActionCollapse(MenuItem item) {
 //                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_app_theme));
 //                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                Log.d("search","collapse");
+//                Log.d("search","collapse");
+                adapter.restoreOriginalList();
+                adapter.notifyDataSetChanged();
                 return true;
 
             }
