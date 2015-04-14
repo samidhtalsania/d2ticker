@@ -11,5 +11,9 @@
     <item name="purple" type="color">#FFAA66CC</item>
     <item name="green" type="color">#FF99CC00</item>
     <item name="orange" type="color">#FFFFBB33</item>
+    <item name="titleBarTextColor" type="color">#FFF</item>
+
+    <item name="metro_dark" type="color">#eff4ff</item>
+    <item name="metro_dark_blue" type="color">#2b5797</item>
 
 </resources>

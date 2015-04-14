@@ -31,6 +31,7 @@ public class MatchDetailsActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_details);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
         final Match match = getIntent().getParcelableExtra("MATCH_ID");
 
         if(match != null){
@@ -67,15 +68,17 @@ public class MatchDetailsActivity extends ActionBarActivity {
             long mins = (time % 3600) / 60;
 
             StringBuilder sb = new StringBuilder();
-            sb.append("in ").append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m");
+
+
 
             //If only 5 mins left for match make it live
             if(DateTime.now(DateTimeZone.UTC).getMillis() > match.getETA()-5*60*1000){
                 status.setText("LIVE");
             }
             else{
-                status.setText(sb.toString());
-                status.setTextColor(getResources().getColor(R.color.black));
+                status.setText(hours == 0
+                        ?sb.append(String.valueOf(mins)).append("m")
+                        :sb.append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m"));
             }
 
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){

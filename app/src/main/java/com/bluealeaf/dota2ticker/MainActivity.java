@@ -94,6 +94,9 @@ public class MainActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

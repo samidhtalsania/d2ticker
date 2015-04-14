@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bluealeaf.dota2ticker.R;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import greendao.Match;
+
+//import android.widget.Switch;
 
 /**
  * Created by samidh on 5/1/15.
@@ -53,7 +55,8 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
         TextView ETA;
         ImageView teamOneCnt;
         ImageView teamTwoCnt;
-        Switch alarmSwitch;
+        SwitchCompat alarmSwitch;
+//        Switch alarmSwitch;
     }
 
     public MatchListAdapter(Context context, List<Match> match) {
@@ -93,10 +96,12 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
             viewHolder.teamTwo = (TextView) view.findViewById(R.id.teamTwo);
             viewHolder.vs = (TextView) view.findViewById(R.id.vs);
             viewHolder.ETA = (TextView) view.findViewById(R.id.ETA);
-            viewHolder.alarmSwitch = (Switch) view.findViewById(R.id.alarmSwitch);
+            viewHolder.alarmSwitch = (SwitchCompat) view.findViewById(R.id.alarmSwitchCompat);
             viewHolder.teamOneCnt = (ImageView) view.findViewById(R.id.teamOneCnt);
             viewHolder.teamTwoCnt = (ImageView) view.findViewById(R.id.teamTwoCnt);
             view.setTag(viewHolder);
+
+
         }
         else{
             viewHolder = (ViewHolder) view.getTag();
@@ -104,12 +109,6 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
 
 
 
-        long temp = match_data.getETA() - millisCurrent;
-        temp /= 1000;
-        long hours = temp / 3600;
-        long mins = (temp % 3600) / 60;
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m");
 
         viewHolder.teamOne.setText(match_data.getT1());
         viewHolder.teamTwo.setText(match_data.getT2());
@@ -131,6 +130,8 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
 
         viewHolder.teamOneCnt.setImageResource(t1Resource);
         viewHolder.teamTwoCnt.setImageResource(t2Resource);
+
+
 
         viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -158,7 +159,17 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
             }
         });
         viewHolder.alarmSwitch.setChecked(match_data.getAlarm_set());
-        viewHolder.ETA.setText(sb.toString());
+
+        long temp = match_data.getETA() - millisCurrent;
+        temp /= 1000;
+        long hours = temp / 3600;
+        long mins = (temp % 3600) / 60;
+
+        StringBuilder sb = new StringBuilder();
+
+        viewHolder.ETA.setText(hours == 0
+                            ?sb.append(String.valueOf(mins)).append("m")
+                            :sb.append(String.valueOf(hours)).append("h").append(" ").append(String.valueOf(mins)).append("m"));
 
         return view;
     }

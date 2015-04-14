@@ -27,7 +27,7 @@
             android:textStyle="bold"
             android:id="@+id/teamOne"
             android:layout_toRightOf="@+id/teamOneCnt"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="sans-serif"
             android:layout_marginLeft="10dp"/>
 
         </RelativeLayout>
@@ -49,7 +49,7 @@
         <TextView
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/alarmSwitch"
+            android:layout_toLeftOf="@+id/alarmSwitchCompat"
             android:background="@drawable/rounded_corner"
             android:padding="5dp"
             android:layout_marginRight="20dp"
@@ -59,13 +59,22 @@
             android:fontFamily="sans-serif"
             android:id="@+id/ETA"/>
 
-        <Switch
-            android:id="@+id/alarmSwitch"
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/alarmSwitchCompat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
             android:layout_alignParentRight = "true"
             android:layout_centerVertical="true"/>
+
+
+        <!--<Switch-->
+            <!--android:id="@+id/alarmSwitch"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:focusable="false"-->
+            <!--android:layout_alignParentRight = "true"-->
+            <!--android:layout_centerVertical="true"/>-->
 
 
     </RelativeLayout>
@@ -85,9 +94,10 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/teamTwoCnt"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="sans-serif"
             android:layout_marginLeft="10dp"
-            android:id="@+id/teamTwo"/>
+            android:id="@+id/teamTwo"
+            android:focusable="false" />
 
         <ImageView
             android:id="@+id/teamTwoCnt"

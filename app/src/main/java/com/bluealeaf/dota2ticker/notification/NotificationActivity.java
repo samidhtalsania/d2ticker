@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 
 import com.bluealeaf.dota2ticker.MatchDetailsActivity;
@@ -36,7 +37,8 @@ public class NotificationActivity extends BroadcastReceiver {
             if (Build.VERSION.SDK_INT >= 16) {
                 notification = new Notification.Builder(context)
                         .setContentTitle(match.getT1() + " vs. " + match.getT2())
-                        .setSmallIcon(R.drawable.abc_ab_share_pack_holo_dark)
+                        .setSmallIcon(R.drawable.watch)
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_launcher))
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
                         .build();
