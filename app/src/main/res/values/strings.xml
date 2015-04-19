@@ -7,8 +7,8 @@
     <string name="action_search">Search</string>
     <string name="title_activity_match_details">MatchDetailsActivity</string>
 
-    <string name="banner_ad_unit_id_MatchDetailsActivity">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id_MainActivity">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id_MatchDetailsActivity">ca-app-pub-9895615459019718/7592883180</string>
+    <string name="banner_ad_unit_id_MainActivity">ca-app-pub-9895615459019718/6116149980</string>
 
 
     <string name="search_hint">Search Matches</string>

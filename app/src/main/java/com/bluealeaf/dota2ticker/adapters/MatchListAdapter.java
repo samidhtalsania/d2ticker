@@ -37,8 +37,8 @@ import greendao.Match;
  */
 public class MatchListAdapter extends BaseAdapter implements Filterable {
 
-    private List<Match> match;
-    private List<Match> originalMatch;
+    private ArrayList<Match> match;
+    private ArrayList<Match> originalMatch;
     private Context context;
     private long millisCurrent;
 
@@ -59,7 +59,7 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
 //        Switch alarmSwitch;
     }
 
-    public MatchListAdapter(Context context, List<Match> match) {
+    public MatchListAdapter(Context context, ArrayList<Match> match) {
         this.match = match;
         this.originalMatch = match;
         this.context = context;
@@ -213,8 +213,9 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
         return (int) l;
     }
 
-    public void restoreOriginalList(){
+    public ArrayList<Match> restoreOriginalList(){
         match = originalMatch;
+        return match;
     }
 
     public void setFilteredList(ArrayList<Match> match){

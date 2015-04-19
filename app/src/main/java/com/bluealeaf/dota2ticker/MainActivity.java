@@ -412,6 +412,7 @@ public class MainActivity extends ActionBarActivity{
         if(event.getConstraint().toString().length() > 0 ){
             adapter.setFilteredList(event.getValues());
             adapter.notifyDataSetChanged();
+            this.matches = event.getValues();
             if(event.getValues().size() == 0){
                 TextView tv = (TextView) findViewById(R.id.emptyView);
                 tv.setText("No matches for this team.");
@@ -420,7 +421,7 @@ public class MainActivity extends ActionBarActivity{
             }
         }
         else{
-            adapter.restoreOriginalList();
+            this.matches = adapter.restoreOriginalList();
             adapter.notifyDataSetChanged();
         }
     }
