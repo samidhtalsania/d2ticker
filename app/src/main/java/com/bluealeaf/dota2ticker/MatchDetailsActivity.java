@@ -117,7 +117,10 @@ public class MatchDetailsActivity extends ActionBarActivity {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     StringBuilder sb = new StringBuilder();
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, sb.append(match.getT1()).append(" vs ").append(match.getT2()).append(" ").append(status.getText()).toString());
+                    sb.append(match.getT1()).append(" vs ").append(match.getT2()).append(" ").append(status.getText());
+                    sb.append("\n");
+                    sb.append("Sent using DotaBuzz : http://goo.gl");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, "Share using..."));
                 }
