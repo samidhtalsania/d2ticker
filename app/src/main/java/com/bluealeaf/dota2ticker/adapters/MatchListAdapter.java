@@ -107,9 +107,6 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-
-
-
         viewHolder.teamOne.setText(match_data.getT1());
         viewHolder.teamTwo.setText(match_data.getT2());
         viewHolder.vs.setText("vs");
@@ -120,12 +117,12 @@ public class MatchListAdapter extends BaseAdapter implements Filterable {
 
         if(t1Resource == 0){
 //            t1Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
-            t1Resource = R.drawable.ic_action_help;
+            t1Resource = R.drawable.ic_question;
         }
 
         if(t2Resource == 0){
 //            t2Resource = context.getResources().getIdentifier(context.getPackageName()+":drawable/unknown_30px",null,null);
-            t2Resource = R.drawable.ic_action_help;
+            t2Resource = R.drawable.ic_question;
         }
 
         viewHolder.teamOneCnt.setImageResource(t1Resource);
