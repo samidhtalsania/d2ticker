@@ -20,3 +20,8 @@
     public static java.lang.String TABLENAME;
 }
 -keep class **$Properties
+
+-dontwarn com.squareup.**
+-dontwarn okio.**
+-dontwarn retrofit.**
+-dontwarn org.joda.time.**
