@@ -8,7 +8,7 @@ android {
         applicationId "com.bluealeaf.dota2ticker"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 2
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {

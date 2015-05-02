@@ -2,6 +2,7 @@ package com.bluealeaf.dota2ticker.events;
 
 import android.util.Log;
 
+import com.bluealeaf.dota2ticker.async.LiveRestClient;
 import com.bluealeaf.dota2ticker.async.RestClient;
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.database.MatchDbOperations;
@@ -66,5 +67,10 @@ public class GetMatchesEvent {
         else{
            BusProvider.getBusInstance().post(new RestErrorEvent(event.getMessage()));
         }
+    }
+
+    @Subscribe
+    public void OnRequestForLiveMatches(GetLiveMatchesEvent event){
+        LiveRestClient.getLiveMatchesList();
     }
 }

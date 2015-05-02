@@ -1,0 +1,21 @@
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    tools:context="com.bluealeaf.dota2ticker.Fragments.UpcomingFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+        <ListView
+            android:id="@+id/match_live_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+</LinearLayout>
+
+
+
