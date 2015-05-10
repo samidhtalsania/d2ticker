@@ -35,13 +35,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
                 <ImageView
-                    android:id="@+id/no_connection_icon"
+                    android:id="@+id/no_connection_icon_upc"
                     android:layout_width="256dp"
                     android:layout_height="256dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_no_connection"/>
                 <TextView
-                    android:id="@+id/emptyView"
+                    android:id="@+id/emptyView_upc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -51,7 +51,7 @@
                     android:gravity="center"
                     android:layout_marginTop="60dp"
                     android:padding="15dp"
-                    android:layout_below="@+id/no_connection_icon" />
+                    android:layout_below="@+id/no_connection_icon_upc" />
             </RelativeLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>

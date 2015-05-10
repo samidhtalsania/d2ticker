@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bluealeaf.dota2ticker.R;
-import com.bluealeaf.dota2ticker.models.Game;
+import com.bluealeaf.dota2ticker.async.TeamImageClient;
+import com.bluealeaf.dota2ticker.models.game.Game;
 
 import java.util.ArrayList;
 
@@ -21,12 +22,12 @@ public class MatchLiveListAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Game> games;
 
-    static class ViewHolder{
+    public static class ViewHolder{
         TextView teamOne;
         TextView vs;
         TextView teamTwo;
-        ImageView teamOneCnt;
-        ImageView teamTwoCnt;
+        public ImageView teamOneCnt;
+        public ImageView teamTwoCnt;
     }
 
     public MatchLiveListAdapter(Context context, ArrayList<Game> games){
@@ -77,12 +78,16 @@ public class MatchLiveListAdapter extends BaseAdapter {
         viewHolder.teamTwo.setText(game.getDireTeam().getTeamName());
         viewHolder.vs.setText("vs");
 
+        TeamImageClient.getTeamLogo(game.getRadiantTeam().getTeamLogo(),position,"R");
+        TeamImageClient.getTeamLogo(game.getDireTeam().getTeamLogo(),position,"D");
 
         viewHolder.teamOneCnt.setImageResource(R.drawable.ic_question);
         viewHolder.teamTwoCnt.setImageResource(R.drawable.ic_question);
 
         return view;
     }
+
+
 
 
 

@@ -1,7 +1,7 @@
 package com.bluealeaf.dota2ticker.async;
 
 
-import com.bluealeaf.dota2ticker.models.LiveMatch;
+import com.bluealeaf.dota2ticker.models.game.LiveMatch;
 
 import retrofit.Callback;
 import retrofit.http.GET;

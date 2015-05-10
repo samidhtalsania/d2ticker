@@ -1,7 +1,7 @@
 package com.bluealeaf.dota2ticker.events;
 
-import com.bluealeaf.dota2ticker.models.Game;
-import com.bluealeaf.dota2ticker.models.LiveMatch;
+import com.bluealeaf.dota2ticker.models.game.Game;
+import com.bluealeaf.dota2ticker.models.game.LiveMatch;
 
 import java.util.ArrayList;
 

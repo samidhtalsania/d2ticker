@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -172,7 +173,8 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        //getActivity() might return nll in onCreateView.
+        //so get the activity reference in onAttach where it is guaranteed to get activity
         mContext = mActivity = this.getActivity();
     }
 
@@ -183,7 +185,7 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
 
         LinearLayout llayout = (LinearLayout) inflater.inflate(R.layout.fragment_upcoming,container,false);
 
-        mAdView = (AdView) llayout.findViewById(R.id.adView);
+        mAdView = (AdView) llayout.findViewById(R.id.adView_upc);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.setAdListener(new AdListener() {
@@ -218,7 +220,7 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
 
 
 
-        swipeRefreshLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe);
+        swipeRefreshLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_upc);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.blue, R.color.purple,
                 R.color.green, R.color.orange);
@@ -232,14 +234,14 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
                     BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
                 }
                 else{
-                    Toast.makeText(mContext, "Please connect to internet.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, mActivity.getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
 
 
-        emptySwipeRefreshLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipeRefreshLayout_emptyView);
+        emptySwipeRefreshLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipeRefreshLayout_emptyView_upc);
         emptySwipeRefreshLayout.setColorSchemeResources(
                 R.color.blue, R.color.purple,
                 R.color.green, R.color.orange);
@@ -253,11 +255,13 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
                     BusProvider.getBusInstance().post(new GetIdFromDbEvent(OkHttpClientConst.FORCE_NETWORK));
                 }
                 else{
-                    Toast.makeText(mContext,"Please connect to internet.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext,mActivity.getResources().getText(R.string.msg_no_internet),Toast.LENGTH_LONG).show();
                     emptySwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
+
+        emptySwipeRefreshLayout.setVisibility(View.GONE);
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -272,7 +276,7 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        listView.setEmptyView(emptySwipeRefreshLayout);
+//        listView.setEmptyView(emptySwipeRefreshLayout);
         listView.setAdapter(adapter);
 
         mAdView.resume();
@@ -334,6 +338,10 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
             listView.setSelectionFromTop(index, top);
             Log.d(tag,"called");
         }
+        listView.setEmptyView(emptySwipeRefreshLayout);
+        RelativeLayout rLayout = (RelativeLayout) mActivity.findViewById(R.id.empty_container_upc);
+        rLayout.setVisibility(View.VISIBLE);
+
     }
 
 
@@ -362,9 +370,9 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
         }
         //There was no error. THere are no matches to show.
         else{
-            TextView tv = (TextView) mActivity.findViewById(R.id.emptyView);
-            tv.setText("There are no matches Scheduled. Go enjoy a game of Dota2 and check back later.");
-            ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon);
+            TextView tv = (TextView) mActivity.findViewById(R.id.emptyView_upc);
+            tv.setText(mActivity.getResources().getText(R.string.msg_no_matches_upc));
+            ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon_upc);
             iv.setVisibility(View.GONE);
         }
     }
@@ -420,9 +428,9 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
         if(event.getMessage().equals(Errors.Retrofit_NETWORK)){
             //Network error + no matches
             if(matches.size() == 0){
-                TextView tv = (TextView) mActivity.findViewById(R.id.emptyView);
-                tv.setText("Not connected to internet. Swipe down after connecting to internet.");
-                ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon);
+                TextView tv = (TextView) mActivity.findViewById(R.id.emptyView_upc);
+                tv.setText(mActivity.getResources().getText(R.string.msg_no_matches_error_upc));
+                ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon_upc);
                 iv.setVisibility(View.VISIBLE);
             }
         }
@@ -437,9 +445,9 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
             adapter.notifyDataSetChanged();
             this.matches = event.getValues();
             if(event.getValues().size() == 0){
-                TextView tv = (TextView) mActivity.findViewById(R.id.emptyView);
-                tv.setText("No matches for this team.");
-                ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon);
+                TextView tv = (TextView) mActivity.findViewById(R.id.emptyView_upc);
+                tv.setText(mActivity.getResources().getText(R.string.msg_no_matches_search_upc));
+                ImageView iv = (ImageView) mActivity.findViewById(R.id.no_connection_icon_upc);
                 iv.setVisibility(View.GONE);
             }
         }

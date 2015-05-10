@@ -48,9 +48,13 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".TabActivity" >
         </activity>
-
+        <activity
+            android:name=".GameDetailsActivityTabbed"
+            android:label="@string/title_activity_game_details_activity_tabbed"
+            android:parentActivityName=".TabActivity">
+        </activity>
     </application>
 
 </manifest>

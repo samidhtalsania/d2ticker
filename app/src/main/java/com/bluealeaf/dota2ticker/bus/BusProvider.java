@@ -10,6 +10,7 @@ import com.bluealeaf.dota2ticker.R;
 import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.constants.OkHttpClientConst;
 import com.bluealeaf.dota2ticker.events.GetMatchesEvent;
+import com.bluealeaf.dota2ticker.models.game.Game;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -58,6 +59,8 @@ public class BusProvider extends Application {
 
     private GetMatchesEvent mGetMatchesEvent;
 
+    public static Game game;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -101,4 +104,9 @@ public class BusProvider extends Application {
         String time = prefs.getString(getString(R.string.pref_alarm_key), "5 mins");
         notifyTime = Integer.parseInt(time.split(" ")[0]);
     }
+
+
+
+
+
 }

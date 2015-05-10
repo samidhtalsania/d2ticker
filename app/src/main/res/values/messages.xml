@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="msg_no_internet">Please connect to internet.</string>
+    <string name="msg_no_matches_live">No Matches going on now. Check back later or swipe to refresh.</string>
+    <string name="msg_no_matches_error_live">There was some error retrieving data. Please try again later.</string>
+
+    <string name="msg_no_matches_upc">There are no matches Scheduled. Go enjoy a game of Dota2 and check back later.</string>
+    <string name="msg_no_matches_error_upc">There was some error retrieving data. Please try again later.</string>
+    <string name="msg_no_matches_search_upc">No matches for this team.</string>
+</resources>

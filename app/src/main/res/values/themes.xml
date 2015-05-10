@@ -6,6 +6,11 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
 
+        <item name="actionBarTabStyle">@style/MyTabStyle</item>
+        <item name="android:actionBarTabStyle">@style/MyTabStyle</item>
+
+        <item name="actionBarTabBarStyle">@style/MyTabBarStyle</item>
+        <item name="android:actionBarTabBarStyle">@style/MyTabBarStyle</item>
 
         <!-- Theme for switches-->
         <item name="colorControlActivated">@color/blue_app_theme</item>
@@ -19,9 +24,24 @@
         <item name="background">@color/blue_app_theme</item>
         <item name="android:titleTextStyle">@style/MyActionBarTextStyle</item>
         <item name="titleTextStyle">@style/MyActionBarTextStyle</item>
+        <item name="android:backgroundStacked">@color/blue_app_theme</item>
+        <item name="backgroundStacked">@color/blue_app_theme</item>
+    </style>
 
+
+
+    <style name="MyTabStyle" parent="Widget.AppCompat.Light.ActionBar.TabView">
+        <item name="android:showDividers">none</item>
+        <item name="android:background">@drawable/tab_indicator</item>
+    </style>
+
+
+    <style name="MyTabBarStyle" parent="Widget.AppCompat.Light.ActionBar.TabBar">
+        <item name="android:showDividers">none</item>
 
     </style>
+
+
 
 
     <style name="MyActionBarTextStyle"
@@ -31,6 +51,7 @@
         <item name="android:textColor">@color/titleBarTextColor</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
+
 
     </style>
 

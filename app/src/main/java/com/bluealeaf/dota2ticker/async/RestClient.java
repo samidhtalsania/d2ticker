@@ -4,8 +4,6 @@ package com.bluealeaf.dota2ticker.async;
  * Created by samidh on 4/1/15.
  */
 
-import android.util.Log;
-
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Endpoints;
 import com.bluealeaf.dota2ticker.constants.Errors;
@@ -33,7 +31,7 @@ public class RestClient {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(new GsonConverter(gson))
                 .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();
@@ -44,14 +42,14 @@ public class RestClient {
             @Override
             public void success(Api api, Response response) {
                 //pass an event to main activity on success
-                Log.d(tag,"getMatchesList-S");
+
                 Api temp = api;
                 BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(temp));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(tag,"getMatchesList-F");
+
                 //pass an event to main activity on failure
                 if(error.getKind() == RetrofitError.Kind.NETWORK){
                     BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_NETWORK));

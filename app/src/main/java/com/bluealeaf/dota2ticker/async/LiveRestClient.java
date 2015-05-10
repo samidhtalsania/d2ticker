@@ -6,7 +6,7 @@ import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Endpoints;
 import com.bluealeaf.dota2ticker.constants.Errors;
 import com.bluealeaf.dota2ticker.events.PassLiveMatchListFromNetEvent;
-import com.bluealeaf.dota2ticker.models.LiveMatch;
+import com.bluealeaf.dota2ticker.models.game.LiveMatch;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,7 +32,7 @@ public class LiveRestClient {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(new GsonConverter(gson))
                 .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();
@@ -42,14 +42,14 @@ public class LiveRestClient {
         live_matches.getLiveMatchesList(new Callback<LiveMatch>() {
             @Override
             public void success(LiveMatch result, Response response) {
-                Log.d(tag, "getLiveMatchesList-S");
+
                 LiveMatch temp = result;
                 BusProvider.getBusInstance().post(new PassLiveMatchListFromNetEvent(temp));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(tag,"getLiveMatchesList-F");
+
                 //pass an event to main activity on failure
                 if(error.getKind() == RetrofitError.Kind.NETWORK){
                     Log.d(tag,Errors.Retrofit_NETWORK);
