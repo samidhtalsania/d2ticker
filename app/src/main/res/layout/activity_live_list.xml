@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_margin="@dimen/list_margin"
+    android:padding="@dimen/list_padding"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_margin"
+        android:id="@+id/teamOneDataLive">
+
+        <ImageView
+            android:id="@+id/teamOneCntLive"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:id="@+id/teamOneLive"
+            android:layout_toRightOf="@+id/teamOneCntLive"
+            android:fontFamily="sans-serif"
+            android:layout_marginLeft="10dp"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_margin"
+        android:id="@+id/matchDataLive">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:fontFamily="sans-serif"
+            android:id="@+id/vsLive"/>
+
+
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_margin"
+        android:id="@+id/teamTwoDataLive">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/teamTwoCntLive"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/teamTwoLive"
+            android:focusable="false" />
+
+        <ImageView
+            android:id="@+id/teamTwoCntLive"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,42 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:layout_margin="@dimen/list_margin"
     android:padding="@dimen/list_padding"
-    android:background="@color/white">
+    android:orientation="vertical">
 
-
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="teamOne"
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
-        android:id="@+id/teamOne"/>
+        android:id="@+id/teamOneData">
 
-    <TextView
+        <ImageView
+            android:id="@+id/teamOneCnt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:id="@+id/teamOne"
+            android:layout_toRightOf="@+id/teamOneCnt"
+            android:fontFamily="sans-serif"
+            android:layout_marginLeft="10dp"/>
+
+        </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/teamOne"
-        android:text="vs."
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
-        android:id="@+id/vs"/>
+        android:id="@+id/matchData">
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:fontFamily="sans-serif"
+            android:id="@+id/vs"/>
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/alarmSwitchCompat"
+            android:background="@drawable/rounded_corner"
+            android:padding="5dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"
+            android:id="@+id/ETA"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/alarmSwitchCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:layout_alignParentRight = "true"
+            android:layout_centerVertical="true"/>
+
+
+        <!--<Switch-->
+            <!--android:id="@+id/alarmSwitch"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:focusable="false"-->
+            <!--android:layout_alignParentRight = "true"-->
+            <!--android:layout_centerVertical="true"/>-->
+
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/vs"
-        android:text="teamTwo"
         android:layout_marginLeft="@dimen/list_margin"
-        android:layout_centerVertical="true"
-        android:id="@+id/teamTwo"/>
+        android:id="@+id/teamTwoData">
 
-    <Switch
-        android:id="@+id/alarmSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight = "true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/teamTwoCnt"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/teamTwo"
+            android:focusable="false" />
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/teamTwoCnt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_corner"
+            android:padding="3dp"/>
+
+        </RelativeLayout>
+
+</LinearLayout>

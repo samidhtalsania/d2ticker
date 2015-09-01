@@ -6,7 +6,8 @@ package com.bluealeaf.dota2ticker.async;
 
 import com.bluealeaf.dota2ticker.bus.BusProvider;
 import com.bluealeaf.dota2ticker.constants.Endpoints;
-import com.bluealeaf.dota2ticker.events.PassMatchListEvent;
+import com.bluealeaf.dota2ticker.constants.Errors;
+import com.bluealeaf.dota2ticker.events.PassMatchListFromNetEvent;
 import com.bluealeaf.dota2ticker.models.Api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,34 +23,50 @@ public class RestClient {
 
     private static final String tag = RestClient.class.getName();
 
-    public static void getMatchesList(int id){
-
+    public static void getMatchesList(long id){
+//        Log.d(tag, "getMatchesList");
         Gson gson = new GsonBuilder()
                     .create();
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Endpoints.GET_MATCHES_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(new GsonConverter(gson))
                 .setClient(new OkClient(BusProvider.getClientInstance()))
                 .build();
 
         d2ticker ticker = restAdapter.create(d2ticker.class);
+
         ticker.getMatchesList(id, new Callback<Api>() {
             @Override
             public void success(Api api, Response response) {
                 //pass an event to main activity on success
+
                 Api temp = api;
-                BusProvider.getInstance().post(new PassMatchListEvent(temp));
+                BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(temp));
             }
 
             @Override
             public void failure(RetrofitError error) {
+
                 //pass an event to main activity on failure
-                BusProvider.getInstance().post(new PassMatchListEvent(null));
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_NETWORK));
+                }
+                else if(error.getKind() == RetrofitError.Kind.HTTP){
+                        BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_HTTP));
+                }
+                else if(error.getKind() == RetrofitError.Kind.CONVERSION){
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_CONVERSION));
+                }
+                else if(error.getKind() == RetrofitError.Kind.UNEXPECTED){
+                    BusProvider.getBusInstance().post(new PassMatchListFromNetEvent(Errors.Retrofit_UNEXPECTED));
+                }
             }
         });
+
+
 
     }
 }

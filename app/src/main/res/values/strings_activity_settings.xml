@@ -1,0 +1,12 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_alarm_key">alarm_list</string>
+    <string name="alarm_before">Notify before time</string>
+    <string-array name="pref_alarm_times">
+        <item>5 Mins</item>
+        <item>10 Mins</item>
+        <item>15 Mins</item>
+    </string-array>
+</resources>

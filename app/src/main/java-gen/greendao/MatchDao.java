@@ -26,7 +26,8 @@ public class MatchDao extends AbstractDao<Match, Long> {
         public final static Property T2 = new Property(2, String.class, "t2", false, "T2");
         public final static Property T1c = new Property(3, String.class, "t1c", false, "T1C");
         public final static Property T2c = new Property(4, String.class, "t2c", false, "T2C");
-        public final static Property ETA = new Property(5, String.class, "ETA", false, "ETA");
+        public final static Property ETA = new Property(5, Long.class, "ETA", false, "ETA");
+        public final static Property Alarm_set = new Property(6, Boolean.class, "alarm_set", false, "ALARM_SET");
     };
 
 
@@ -47,7 +48,8 @@ public class MatchDao extends AbstractDao<Match, Long> {
                 "'T2' TEXT," + // 2: t2
                 "'T1C' TEXT," + // 3: t1c
                 "'T2C' TEXT," + // 4: t2c
-                "'ETA' TEXT);"); // 5: ETA
+                "'ETA' INTEGER," + // 5: ETA
+                "'ALARM_SET' INTEGER);"); // 6: alarm_set
     }
 
     /** Drops the underlying database table. */
@@ -86,9 +88,14 @@ public class MatchDao extends AbstractDao<Match, Long> {
             stmt.bindString(5, t2c);
         }
  
-        String ETA = entity.getETA();
+        Long ETA = entity.getETA();
         if (ETA != null) {
-            stmt.bindString(6, ETA);
+            stmt.bindLong(6, ETA);
+        }
+ 
+        Boolean alarm_set = entity.getAlarm_set();
+        if (alarm_set != null) {
+            stmt.bindLong(7, alarm_set ? 1l: 0l);
         }
     }
 
@@ -107,7 +114,8 @@ public class MatchDao extends AbstractDao<Match, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // t2
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // t1c
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // t2c
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // ETA
+            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // ETA
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0 // alarm_set
         );
         return entity;
     }
@@ -120,7 +128,8 @@ public class MatchDao extends AbstractDao<Match, Long> {
         entity.setT2(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setT1c(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setT2c(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setETA(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setETA(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
+        entity.setAlarm_set(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
      }
     
     /** @inheritdoc */

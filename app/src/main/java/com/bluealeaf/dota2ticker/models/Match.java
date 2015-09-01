@@ -21,7 +21,7 @@ public class Match {
     @Expose
     private String ETA;
     @Expose
-    private int id;
+    private long id;
 
     /**
      *
@@ -118,7 +118,7 @@ public class Match {
      * @return
      * The id
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -127,7 +127,7 @@ public class Match {
      * @param id
      * The id
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

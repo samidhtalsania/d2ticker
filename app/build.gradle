@@ -8,12 +8,12 @@ android {
         applicationId "com.bluealeaf.dota2ticker"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,6 +28,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
@@ -36,4 +37,8 @@ dependencies {
     compile 'joda-time:joda-time:2.6'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'de.greenrobot:greendao:1.3.7'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "com.android.support:cardview-v7:21.0.2"
 }

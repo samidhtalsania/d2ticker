@@ -11,5 +11,5 @@ import retrofit.http.Path;
  */
 public interface d2ticker {
     @GET("/match/{id}")
-    void getMatchesList(@Path("id") int id, Callback<Api> api);
+    void getMatchesList(@Path("id") long id, Callback<Api> api);
 }
